@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>
-            <%=title%>
+            <%=locals.title%>
         </title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -10,14 +10,15 @@
         
     </head>
     <body>
-        <div id="main">
+        
             <div class="section1"><h1>TODO App</h1></div>
-            <form action="/add-task" method="POST">
-            <div class="row"><input type="text" name="description" style="position: relative;" placeholder="What do you need to do?"></div>
-            <p id="desc-heading">DESCRIPTION:</p>
-             
-            <div class="row">
-                <div class="cols">
+               <div id="main">       
+                  <form action="/create-task" method="POST">
+                   <div class="row"><input type="text" class="entry" name="description" style="position: relative;" placeholder="What do you need to do?"></div>
+                    <p id="desc-heading">DESCRIPTION:</p>
+            
+                    <div class="row" style="margin-top: 1%;">
+                    <div class="cols">
                     <select class="custom-select" name="category">
                         <option selected>Choose a category</option>
                         <option value="Personal">Personal</option>
@@ -28,39 +29,55 @@
                       </select>
                        <p id="cate-heading">CATEGORY</p>
                 </div>
-                <div class="cols" style="margin-left: 50%;">
-                    <input type="date" name="date">
+                <div class="cols" style="margin-left: 51%;">
+                    <input type="date" class="entry" name="date">
                     <p id="cate-heading">DUE DATE</p>
         
                 </div>
             </div>
-            <div class="row" style="height: 30%;">
-            <button type="submit" class="add-task-btn"><i class="fa fa-plus add-icon"></i><span style="margin-left:10px;">ADD TASK</span> </button>
-            
-                
-            <button type="submit" class="delete-task-btn"><i class="fa fa-trash add-icon"></i><span style="margin-left:10px;">DELETE TASKS</span></button>
-        
-        
+            <div class="row" style="height: 20%; border:none">
+                <button type="submit" class="add-task-btn">
+                    <i class="fa fa-plus add-icon"></i><span style="margin-left:10px;">ADD TASK</span> </button>
+                    
             </div>
+            
         </form>
-            <% for(let i of todo_list){ %>
-            <div class="row" style="height: 20%;">
-                <div>
-                    <input type="checkbox" class="tick">
+
+        <% for(let i of todo_list){ %>
+            <% if(i._id == locals.idTask) { %>
+                <form action="/edit-task/?id=<%= i._id %>" method="POST">
+                    <div class="row" style="height: 20%;">
+                    
+                        <div class="edit-task"><input type="text" class="edit-task-input" value="<%= i.description %>" name="description"></div>
+                        <div class="edit-date"><input type="date" class="edit-date-input" value="<%= i.date %>" name="date"></div>
+                        <div class="update-calender-icon"><i class="fa fa-calendar"></i></div>
+                        <div><button type="submit" class="confirm">Confirm</button></div>
+                        <div class="cancel"><a href="/">Cancel</a></div>
+
+                    </div>
+                </form>
+                <% } else { %>
+                <div class="row" style="height: 20%;border: solid 1px white;">
+                    <div>
+                        <div class="task-added"><p><%=i.description%></p></div>
+                        <div class="calender-icon"><i class="fa fa-calendar"></i></div>
+                        <div class="date-shown"><p><%=i.date%></p></div>
+                    </div>
+                    <div class="category-display"><p><%=i.category %></p></div>
+                    <a href="/edit-task/?id=<%=i._id%>">
+                        <i class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
+                    </a>
+                    <a href="/delete-task/?id=<%=i._id%>">
+                        <i class="fa fa-times-circle delete" aria-hidden="true"></i>
+                    </a>
+                    
                 </div>
-                <div>
-                    <div id="task-added"><p><%=i.description%></p></div>
-                    <div class="calender-icon"><i class="fa fa-calendar"></i></div>
-                    <div class="date-shown"><p><%=i.date%></p></div>
-                </div>
-                <div class="category-display"><p><%=i.category %></p></div>
-                
-                
-            </div>
-            <% } %>
-            <div class="row" style="height: 20%;">
+                <% } %>
+                <% } %>
             
             </div>
-        </div>
+        
+
+            
     </body>         
 </html>
